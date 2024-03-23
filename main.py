@@ -1,5 +1,5 @@
 from agent import Agent
-from h_map_generator import creat_h_map
+from h_map_generator import create_h_map
 
 
 with open("map.txt", "r") as file:
@@ -25,7 +25,7 @@ while x != 0:
     for row in s1.viewableMap:
         print(row)
     print("Hider pos: ", s1.opponentPos)
-    hmap = creat_h_map(s1.opponentPos, s1.mapSize, s1.viewableMap)
+    hmap = create_h_map(s1.opponentPos, s1.mapSize, s1.viewableMap)
     print("Hmap: ")
     for row in hmap:
         print(row)

@@ -1,4 +1,4 @@
-def creat_h_map(pos, mapsize, mapData):
+def create_h_map(pos, mapsize, mapData):
     hmap = []
     for i in range(len(mapData)):
         rowData = []
