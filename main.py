@@ -4,7 +4,7 @@ import ReadMap
 
 if __name__ == '__main__':
     mapData = ReadMap.read_map("map.txt")
-    seeker = Seeker.Seeker(5, ReadMap.find_seeker(mapData))
+    seeker = Seeker.Seeker(3, ReadMap.find_seeker(mapData))
       
     print(f"Map size: {len(mapData)} x {len(mapData[0])}")
     print("Map:")
@@ -21,6 +21,7 @@ if __name__ == '__main__':
         hider_pos = seeker.scan_target(mapData, target=2)
         if hider_pos == (-1, -1):
             seeker.explore()
+            continue
         elif hider_last_seen_pos != hider_pos:
             hider_last_seen_pos = hider_pos
             hmap = ComputeHMap.compute_h_map(mapData, destination=hider_pos)
