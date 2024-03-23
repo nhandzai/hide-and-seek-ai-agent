@@ -6,6 +6,6 @@ class Seeker(Agent.Agent):
     def explore(self):
         print("Kill me")
         
-    def chase(self, hmap):
+    def chase(self, hmap, mapData):
         next_direction = self.find_path(hmap)
-        self.move(hmap, next_direction)
+        self.move(mapData, next_direction)

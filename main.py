@@ -25,7 +25,7 @@ if __name__ == '__main__':
             hider_last_seen_pos = hider_pos
             hmap = ComputeHMap.compute_h_map(mapData, destination=hider_pos)
 
-        seeker.chase(hmap)
+        seeker.chase(hmap, mapData)
         print("Map:")
         for row in mapData:
             print(row)
