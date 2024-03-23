@@ -1,16 +1,14 @@
-from movement_agent import Movement
-
-
-class Agent(Movement):
+class Agent:
     viewRange = 5
     role = 0
     mapSize = ()
     mapData = []
     viewableMap = []
     pos = (0, 0)
-    opponentPos = 0
+    opponentPos = (0, 0)
 
     def __init__(self, role, mapSize, mapData):
+        super().__init__()
         self.role = role
         if role == 3:
             self.viewRange = 5
@@ -53,3 +51,28 @@ class Agent(Movement):
                 if self.viewableMap[i][j] == 2:
                     self.opponentPos = (i, j)
                     return self.opponentPos
+
+    # dir: 1-↙ 2-↓ 3-↘ 4-← 6-→ 7-↖ 8-↑ 9-↗
+    # pos(,): tuple contain position
+    def move_agent(self, dir):
+        if dir == (0, 0):
+            return self.mapData
+
+        newPos = (self.pos[0] + dir[0],self.pos[1] + dir[1])
+        self.mapData[newPos[0]][newPos[1]] = self.role
+        self.mapData[self.pos[0]][self.pos[1]] = 0
+        self.pos = newPos
+        return self.mapData
+
+    def find_path(self, hmap):
+        minPathValue = hmap[self.pos[0]][self.pos[1] + 1][1]
+        minPathPos = (self.pos[0], self.pos[1] + 1)
+
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if (i, j) != self.pos:
+                    if minPathValue > hmap[self.pos[0] + i][self.pos[1] + j][1]:
+                        minPathValue = hmap[self.pos[0] + i][self.pos[1] + j][1]
+                        minPathPos = (self.pos[0] + i, self.pos[1] + j)
+        dir = (minPathPos[0] - self.pos[0], minPathPos[1] - self.pos[1])
+        return dir

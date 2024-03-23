@@ -30,10 +30,13 @@ while x != 0:
     for row in hmap:
         print(row)
 
-    move = s1.find_path(hmap, s1.pos)
+    move = s1.find_path(hmap)
     print("move: ", move)
 
-    s1.pos = s1.move_agent(s1.mapData, s1.role, s1.pos, move)
+    mapData = s1.move_agent(move)
 
     print("Continue: ")
     x = int(input())
+print("Map Data:")
+for row in mapData:
+    print(row)
