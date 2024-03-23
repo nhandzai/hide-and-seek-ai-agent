@@ -25,7 +25,7 @@ while x != 0:
     for row in s1.viewableMap:
         print(row)
     print("Hider pos: ", s1.opponentPos)
-    hmap = creat_h_map(s1.opponentPos, s1.viewableMap)
+    hmap = creat_h_map(s1.opponentPos, s1.mapSize, s1.viewableMap)
     print("Hmap: ")
     for row in hmap:
         print(row)
