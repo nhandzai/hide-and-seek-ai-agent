@@ -4,7 +4,7 @@ from movement_agent import Movement
 class Agent(Movement):
     viewRange = 5
     role = 0
-    mapSize = 0
+    mapSize = ()
     mapData = []
     viewableMap = []
     pos = (0, 0)
@@ -16,30 +16,31 @@ class Agent(Movement):
             self.viewRange = 5
         else:
             self.viewRange = 2
-        self.mapSize = mapSize
+        self.mapSize = (mapSize, mapSize)
         self.mapData = mapData
         self.find_positions()
         self.generate_viewable_map()
         self.find_hider()
-    def updateMapdata(self,mapData):
+
+    def updateMapdata(self, mapData):
         self.mapData = mapData
-    
+
     def find_positions(self):
-        for i in range(self.mapSize):
-            for j in range(self.mapSize):
+        for i in range(self.mapSize[0]):
+            for j in range(self.mapSize[1]):
                 if self.mapData[i][j] == self.role:
                     self.pos = (i, j)
 
     def generate_viewable_map(self):
         self.viewableMap = []
         min_i = max(0, self.pos[0] - self.viewRange)
-        max_i = min(self.mapSize, self.pos[0] + self.viewRange + 1)
+        max_i = min(self.mapSize[0], self.pos[0] + self.viewRange + 1)
         min_j = max(0, self.pos[1] - self.viewRange)
-        max_j = min(self.mapSize, self.pos[1] + self.viewRange + 1)
-        
-        for i in range(self.mapSize):
+        max_j = min(self.mapSize[1], self.pos[1] + self.viewRange + 1)
+
+        for i in range(self.mapSize[0]):
             row = []
-            for j in range(self.mapSize):
+            for j in range(self.mapSize[1]):
                 if min_i <= i < max_i and min_j <= j < max_j:
                     row.append(self.mapData[i][j])
                 else:
