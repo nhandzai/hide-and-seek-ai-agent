@@ -22,7 +22,7 @@ def main():
     hmap = []
     explored = seeker.fill_explored(viewable_map, mapData)
     
-    window, clock = MyGUI.create_screen_wrapper(mapData, viewable_map, seeker)
+    screen, clock = MyGUI.create_screen_wrapper(mapData, viewable_map, seeker)
     running = True
     while running:
         for event in pygame.event.get():
@@ -88,7 +88,7 @@ def main():
                 seeker.update_explored(viewable_map, explored)
                 
                 # update the map
-                window.draw_map(mapData, viewable_map)
+                screen.draw_map(mapData, viewable_map)
 
 if __name__ == '__main__':
     main()
