@@ -1,5 +1,4 @@
 import math
-from ordered_set import OrderedSet # pip install ordered-set
 
 x_movement = [-1, -1, -1, 0, 0, 1, 1, 1]
 y_movement = [-1, 0, 1, -1, 1, -1, 0, 1]
@@ -34,19 +33,18 @@ class Agent:
         return viewable_map
     
     # this hasn't considered obstacles yet    
-    def scan_target(self, mapData, target) -> OrderedSet:
-        targets = OrderedSet()
+    def scan_target(self, map, target):
         min_i = max(0, self.pos[0] - self.viewRange)
-        max_i = min(len(mapData), self.pos[0] + self.viewRange + 1)
+        max_i = min(len(map), self.pos[0] + self.viewRange + 1)
         min_j = max(0, self.pos[1] - self.viewRange)
-        max_j = min(len(mapData[0]), self.pos[1] + self.viewRange + 1)
+        max_j = min(len(map[0]), self.pos[1] + self.viewRange + 1)
         
         for i in range(min_i, max_i):
             for j in range(min_j, max_j):
-                if mapData[i][j] == target:
-                    targets.add((i, j))
+                if map[i][j] == target:
+                    return (i, j)
                 
-        return targets
+        return (-1, -1)
     
     def find_path(self, hmap):
         minPath = math.inf
