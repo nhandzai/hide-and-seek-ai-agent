@@ -1,7 +1,6 @@
 import pygame
-import ReadMap
 import math
-import Seeker
+import Manager
 
 WIDTH = 1368
 HEIGHT = 768
@@ -52,17 +51,19 @@ class MyScreen():
 
         self.block_size = int(math.sqrt((m * n) / (row * col)))
 
-    def draw_map(self, mapData: list, seeker_pov: list):
+    def draw_map(self, mapData: list, manager: Manager.Manager):
         self.window.fill(WHITE)
         
         row = len(mapData)
         col = len(mapData[0])
         
         # draw maps
+        seeker_pos = manager.seeker.pos
+        seeker_pov = Manager.Manager.seeker_povs[seeker_pos]
         for i in range(row):
             for j in range(col):
                 cell_color = MAP_COLOR_LIST[mapData[i][j]]
-                if seeker_pov[i][j] != 5:
+                if seeker_pov[i][j]:
                     if mapData[i][j] == 2:
                         cell_color = SPOTTED_HIDER_COLOR
                     elif mapData[i][j] == 0:
@@ -73,12 +74,12 @@ class MyScreen():
                 
         pygame.display.flip()
 
-def create_screen_wrapper(mapData, viewable_map, seeker):
+def create_screen_wrapper(mapData, manager: Manager.Manager):
     pygame.init()
     clock = pygame.time.Clock()
     
     screen = MyScreen(mapData)
-    screen.draw_map(mapData, viewable_map)
+    screen.draw_map(mapData, manager)
     pygame.display.flip()
 
     return screen, clock
