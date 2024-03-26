@@ -82,9 +82,3 @@ def create_screen_wrapper(mapData, viewable_map, seeker):
     pygame.display.flip()
 
     return screen, clock
-    while run:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-        
-        clock.tick(60)

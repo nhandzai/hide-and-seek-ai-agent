@@ -1,7 +1,7 @@
 import Agent
 class Seeker(Agent.Agent):
-    def __init__(self, viewRange, pos, m, n):
-        super().__init__(viewRange, pos)
+    def __init__(self, view_range, pos):
+        super().__init__(view_range, pos)
         
     def explore(self):
         print("Kill me")
