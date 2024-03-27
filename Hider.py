@@ -34,7 +34,7 @@ class Hider(Agent.Agent):
                     minPath = h_value
                     dir = i
         else:
-            maxPath = hmap[self.pos[0]][self.pos[1]]
+            maxPath = -1
             for i in range(8):
                 new_x = self.pos[0] + Agent.x_movement[i]
                 new_y = self.pos[1] + Agent.y_movement[i]
