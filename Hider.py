@@ -26,7 +26,7 @@ class Hider(Agent.Agent):
         
     def find_path(self, ban_list: list, map, hmap, max = False):
         dir = -1
-        if(not max):
+        if (not max):
             minPath = math.inf
             for i in range(8):
                 h_value = hmap[self.pos[0] + Agent.x_movement[i]][self.pos[1] + Agent.y_movement[i]]
@@ -45,4 +45,3 @@ class Hider(Agent.Agent):
                     maxPath = h_value
                     dir = i            
         return dir
-    

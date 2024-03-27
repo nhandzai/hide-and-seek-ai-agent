@@ -91,16 +91,17 @@ class Manager():
                     Manager.seeker_povs[(q, p)] = viewable_map
                 else:
                     Manager.hider_povs[(q, p)] = viewable_map
+                    
     def hiders_ping(self, map_data):
         self.pings = []
         for i in range(len(self.hiders)):
-            if(not self.hiders[i].is_caught):
+            if (not self.hiders[i].is_caught):
                 self.pings.append(self.hiders[i].ping(map_data))
         return self.pings           
 
     def move_hiders(self, map_data):
         for i in range(len(self.hiders)):
-            if(self.hiders[i].is_caught):
+            if (self.hiders[i].is_caught):
                 continue
             seeker_pos = self.hiders[i].scan_target(map_data, config.HIDER_VIEW_RANGE)
             if (seeker_pos != (-1, -1)):
@@ -110,6 +111,6 @@ class Manager():
 
     def check_hiders(self):
         for i in range(len(self.hiders)):
-            if(self.seeker.pos == self.hiders[i].pos):
+            if (self.seeker.pos == self.hiders[i].pos):
                self.hiders[i].is_caught = True 
             

@@ -33,10 +33,15 @@ def main():
                 continue
             
             if event.type == pygame.KEYDOWN:
+                # ping
+                if(turns % 5 == 0):
+                    pings = manager.hiders_ping(map_data)
+                    print(pings)
+                    
                 destination = seeker.scan_target(map_data, 2)
                 if destination == (-1, -1):
                     seeker.explore()
-                    continue
+
                 elif hider_last_seen_pos != destination:
                     hider_last_seen_pos = destination
                     hmap = Manager.Manager.hmaps[destination]
@@ -44,10 +49,10 @@ def main():
                 # move the seeker
                 seeker.move_wrapper(hmap, map_data)
                 manager.check_hiders()
-                if(turns % 5 == 0):
-                    pings = manager.hiders_ping(map_data)
-                    print(pings)
-                manager.move_hiders(map_data)
+                
+                if config.HIDER_CAN_MOVE:
+                    manager.move_hiders(map_data)
+                    
                 # update the map
                 screen.draw_map(map_data, manager)
                 turns += 1
