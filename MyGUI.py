@@ -1,6 +1,7 @@
 import pygame
 import math
 import Manager
+import config
 
 WIDTH = 1368
 HEIGHT = 768
@@ -9,9 +10,10 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 SEEKER_COLOR = (242, 75, 97)
 SEEKER_VISION_COLOR = (223, 224, 171)
-SPOTTED_HIDER_COLOR = (247, 181, 0)
-FOG_OF_WAR = (140, 164, 171)
 HIDER_COLOR = (139, 219, 88)
+SPOTTED_HIDER_COLOR = (247, 181, 0)
+HIDER_VISION_COLOR = (102, 228, 237)
+FOG_OF_WAR = (140, 164, 171)
 WALL_COLOR = (73, 73, 92)
 
 MAP_COLOR_LIST = [WHITE, WALL_COLOR, HIDER_COLOR, SEEKER_COLOR]
@@ -68,6 +70,14 @@ class MyScreen():
                         cell_color = SPOTTED_HIDER_COLOR
                     elif mapData[i][j] == 0:
                         cell_color = SEEKER_VISION_COLOR
+                        
+                elif config.HIDER_CAN_MOVE:
+                    for hider in manager.hiders:
+                        hider_pov = Manager.Manager.hider_povs[hider.pos]
+                        if hider_pov[i][j] and mapData[i][j] == 0:
+                            cell_color = HIDER_VISION_COLOR
+                            break
+
                 normal_map = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
                 pygame.draw.rect(self.window, cell_color, normal_map)
                 pygame.draw.rect(self.window, BLACK, normal_map, 1)
