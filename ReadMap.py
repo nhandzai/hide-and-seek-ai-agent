@@ -18,14 +18,6 @@ def find_seeker(mapData):
                 return (i, j)
     return (-1, -1)
 
-def count_hiders(mapData):
-    count = 0
-    for i in range(len(mapData)):
-        for j in range(len(mapData[i])):
-            if mapData[i][j] == 2:
-                count += 1
-    return count
-
 def find_hiders(mapData) -> list:
     hiders = []
     for i in range(len(mapData)):

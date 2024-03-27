@@ -1,47 +1,56 @@
-import Seeker
-import ComputeHMap
 import ReadMap
 import MyGUI
 import pygame
+import Manager
+import config
+import Seeker
+import Hider
 
 def main():
-    mapData = ReadMap.read_map("map.txt")
-    pos = ReadMap.find_seeker(mapData)
-    seeker = Seeker.Seeker(5, pos, len(mapData), len(mapData[0]))
-    hiders_count = ReadMap.count_hiders(mapData)
-    
-    viewable_map = seeker.generate_viewable_map(mapData)
+    map_data = ReadMap.read_map("map.txt")
+    seeker = Seeker.Seeker(config.SEEKER_VIEW_RANGE, ReadMap.find_seeker(map_data))
+    hiders_pos = ReadMap.find_hiders(map_data)
+    hiders = []
+    for pos in hiders_pos:
+        hiders.append(Hider.Hider(config.HIDER_VIEW_RANGE, pos, config.HIDER_CAN_MOVE))
+        
+    manager = Manager.Manager(seeker, hiders, map_data)
 
     hider_last_seen_pos = (0, 0)    
     destination = (-1, -1)
     hmap = []
     
-    screen, clock = MyGUI.create_screen_wrapper(mapData, viewable_map, seeker)
+    screen, clock = MyGUI.create_screen_wrapper(map_data, manager)
     running = True
+    turns = 1
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             clock.tick(60)
-            if hiders_count == 0:
+            
+            if len(manager.hiders) == 0:
                 continue
+            
             if event.type == pygame.KEYDOWN:
-
-                destination = seeker.scan_target(mapData, 2)
+                destination = seeker.scan_target(map_data, 2)
                 if destination == (-1, -1):
                     seeker.explore()
                     continue
                 elif hider_last_seen_pos != destination:
                     hider_last_seen_pos = destination
-                    hmap = ComputeHMap.compute_h_map(mapData, destination=destination)
+                    hmap = Manager.Manager.hmaps[destination]
 
                 # move the seeker
-                seeker.move_wrapper(hmap, mapData)
-                
-                viewable_map = seeker.generate_viewable_map(mapData)
-                
+                seeker.move_wrapper(hmap, map_data)
+                manager.check_hiders()
+                if(turns % 5 == 0):
+                    pings = manager.hiders_ping(map_data)
+                    print(pings)
+                manager.move_hiders(map_data)
                 # update the map
-                screen.draw_map(mapData, viewable_map)
+                screen.draw_map(map_data, manager)
+                turns += 1
 
 if __name__ == '__main__':
     main()
