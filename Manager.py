@@ -92,6 +92,7 @@ class Manager():
                 else:
                     Manager.hider_povs[(q, p)] = viewable_map
     def hiders_ping(self, map_data):
+        self.pings = []
         for i in range(len(self.hiders)):
             if(not self.hiders[i].is_caught):
                 self.pings.append(self.hiders[i].ping(map_data))

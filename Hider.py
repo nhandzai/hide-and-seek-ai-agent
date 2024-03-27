@@ -10,7 +10,7 @@ class Hider(Agent.Agent):
         self.is_caught = False
         
     def move_wrapper(self, map, hmap, run_away: bool, ban_list: list = None):
-        self.move(map, self.find_path(ban_list, hmap, run_away))
+        self.move(map, self.find_path(ban_list, map, hmap, run_away))
     
     def ping(self, mapData):
         min_i = max(0, self.pos[0] - config.HIDER_PING_RANGE)
@@ -24,7 +24,7 @@ class Hider(Agent.Agent):
             if mapData[rand_i][rand_j] != 1 and (rand_i, rand_j) != self.pos:
                 return (rand_i, rand_j)
         
-    def find_path(self, ban_list: list, hmap, max = False):
+    def find_path(self, ban_list: list, map, hmap, max = False):
         dir = -1
         if(not max):
             minPath = math.inf
@@ -38,6 +38,8 @@ class Hider(Agent.Agent):
             for i in range(8):
                 new_x = self.pos[0] + Agent.x_movement[i]
                 new_y = self.pos[1] + Agent.y_movement[i]
+                if(map[new_x][new_y] == 2):
+                    continue
                 h_value = hmap[new_x][new_y]
                 if h_value != math.inf and maxPath < h_value:
                     maxPath = h_value
