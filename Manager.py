@@ -38,33 +38,54 @@ class Manager():
                 max_j = min(len(map_data[0]), p + view_range + 1)
                 viewable_map = [[False] * cols for _ in range(rows)]
                 
-                for i in range(rows):
-                    for j in range(cols):
+                for i in range(min_i, max_i):
+                    for j in range(min_j, max_j):
                         if map_data[i][j] == 1:
                             viewable_map[i][j] = True
                             continue
                         
                         # raycasting
-                        if min_i <= i < max_i and min_j <= j < max_j:
-                            dx = i - q
-                            dy = j - p
-                            dist = max(abs(dx), abs(dy))
-                            stepX = dx / dist if dist != 0 else 0
-                            stepY = dy / dist if dist != 0 else 0
-                            x = q
-                            y = p
-                            visible = True
-                            for k in range(dist):
+                        dx = abs(i - q)
+                        dy = abs(j - p)
+                        
+                        x = q
+                        y = p
+                        
+                        n = 1 + dx + dy
+                        
+                        stepX = 1 if (i > q) else -1
+                        stepY = 1 if (j > p) else -1
+                        
+                        error = dx - dy
+                        
+                        dx *= 2
+                        dy *= 2
+                        
+                        visible = True
+                        
+                        while n > 0:
+                            if map_data[x][y] == 1:
+                                visible = False
+                                break
+                            
+                            if (error > 0):
+                                x += stepX
+                                error -= dy
+                                
+                            elif (error < 0):
+                                y += stepY
+                                error += dx
+                                
+                            elif (error == 0):
                                 x += stepX
                                 y += stepY
-                                if not (0 <= round(x) < rows and 0 <= round(y) < cols):
-                                    continue
-                                if map_data[round(x)][round(y)] == 1:
-                                    visible = False
-                                    break
+                                error -= dy
+                                error += dx
+                                n -= 1
+                            n -= 1
+                            
+                        viewable_map[i][j] = visible
 
-                            viewable_map[i][j] = visible
-                
                 if view_range == config.SEEKER_VIEW_RANGE:
                     Manager.seeker_povs[(q, p)] = viewable_map
                 else:
