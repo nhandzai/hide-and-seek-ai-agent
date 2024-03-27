@@ -25,7 +25,10 @@ class MyScreen():
         self.left = 0
         self.block_size = 0
         self.do_math(mapData)
-        pass
+        self.seeker_img = pygame.image.load('images\\seeker.jpg').convert()
+        self.seeker_img = pygame.transform.scale(self.seeker_img, (self.block_size, self.block_size))
+        self.hider_img = pygame.image.load('images\\hider.jpg').convert()
+        self.hider_img = pygame.transform.scale(self.hider_img, (self.block_size, self.block_size))
 
     def do_math(self, mapData: list):
         n = len(mapData)
@@ -82,6 +85,9 @@ class MyScreen():
                 pygame.draw.rect(self.window, cell_color, normal_map)
                 pygame.draw.rect(self.window, BLACK, normal_map, 1)
                 
+        self.window.blit(self.seeker_img, pygame.Rect(seeker_pos[1] * self.block_size + self.left, seeker_pos[0] * self.block_size + self.top, self.block_size, self.block_size))
+        for hider in manager.hiders:
+            self.window.blit(self.hider_img, pygame.Rect(hider.pos[1] * self.block_size + self.left, hider.pos[0] * self.block_size + self.top, self.block_size, self.block_size))
         pygame.display.flip()
 
 def create_screen_wrapper(mapData, manager: Manager.Manager):

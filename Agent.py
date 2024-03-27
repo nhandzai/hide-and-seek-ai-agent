@@ -1,8 +1,9 @@
 import math
 import Manager
 
-x_movement = [-1, -1, -1, 0, 0, 1, 1, 1]
-y_movement = [-1, 0, 1, -1, 1, -1, 0, 1]
+# the final movement is only used by hider
+x_movement = [-1, -1, -1, 0, 0, 1, 1, 1, 0]
+y_movement = [-1, 0, 1, -1, 1, -1, 0, 1, 0]
 
 class Agent:
     def __init__(self, viewRange: int, pos: tuple):

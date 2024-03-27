@@ -35,10 +35,11 @@ class Hider(Agent.Agent):
                     dir = i
         else:
             maxPath = -1
-            for i in range(8):
+            for i in range(9):
                 new_x = self.pos[0] + Agent.x_movement[i]
                 new_y = self.pos[1] + Agent.y_movement[i]
-                if(map[new_x][new_y] == 2):
+                # i = 8 is when the hider stands still (prepare to get caught)
+                if map[new_x][new_y] == 2 and i < 8:
                     continue
                 h_value = hmap[new_x][new_y]
                 if h_value != math.inf and maxPath < h_value:
