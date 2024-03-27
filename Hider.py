@@ -4,10 +4,10 @@ import math
 import config
 
 class Hider(Agent.Agent):
-    def __init__(self, view_range, pos: tuple, can_move: bool):
+    def __init__(self, view_range, pos: tuple, can_move: bool, id):
         super().__init__(view_range, pos)
         self.can_move = can_move
-        self.is_caught = False
+        self.id = id
         
     def move_wrapper(self, map, hmap, run_away: bool, ban_list: list = None):
         self.move(map, self.find_path(ban_list, map, hmap, run_away))

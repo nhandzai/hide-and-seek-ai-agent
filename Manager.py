@@ -13,11 +13,16 @@ class Manager():
     def __init__(self, seeker: Seeker, hiders: list[Hider.Hider], map_data):
         self.seeker = seeker
         self.hiders = hiders
-        self.pings = []
+        self.pings = dict()
         self.precompute_hmaps(map_data)
         self.precompute_viewable_maps(map_data, config.SEEKER_VIEW_RANGE)
         if config.HIDER_CAN_MOVE:
             self.precompute_viewable_maps(map_data, config.HIDER_VIEW_RANGE)
+        self.initialize_pings()
+        
+    def initialize_pings(self):
+        for hider in self.hiders:
+            self.pings[hider.id] = []
         
     def precompute_hmaps(self, map_data):
         for i in range(1, len(map_data) - 1):
@@ -93,24 +98,19 @@ class Manager():
                     Manager.hider_povs[(q, p)] = viewable_map
                     
     def hiders_ping(self, map_data):
-        self.pings = []
-        for i in range(len(self.hiders)):
-            if (not self.hiders[i].is_caught):
-                self.pings.append(self.hiders[i].ping(map_data))
+        for hider in self.hiders:
+            self.pings[hider.id].append(hider.ping(map_data))
         return self.pings           
 
     def move_hiders(self, map_data):
         for i in range(len(self.hiders)):
-            if (self.hiders[i].is_caught):
-                continue
-            seeker_pos = self.hiders[i].scan_target(map_data, config.HIDER_VIEW_RANGE)
+            seeker_pos = self.hiders[i].scan_target(map_data, 3)
             if (seeker_pos != (-1, -1)):
                 self.hiders[i].move_wrapper(map_data, self.hmaps[self.seeker.pos], True)
             elif (self.hiders[i].pings != (-1, -1)):
                 self.hiders[i].move_wrapper(map_data, self.hmaps[self.pings[i]], True)
 
     def check_hiders(self):
-        for i in range(len(self.hiders)):
-            if (self.seeker.pos == self.hiders[i].pos):
-               self.hiders[i].is_caught = True 
-            
+        for hider in self.hiders:
+            if (self.seeker.pos == hider.pos):
+               self.hiders.remove(hider)
