@@ -17,7 +17,7 @@ class Agent:
             self.pos = (self.pos[0] + x_movement[dir], self.pos[1] + y_movement[dir])
             map[self.pos[0]][self.pos[1]] = temp
     
-    def scan_target(self, map_data, target):
+   def scan_target(self, map_data, target):
         min_i = max(0, self.pos[0] - self.viewRange)
         max_i = min(len(map_data), self.pos[0] + self.viewRange + 1)
         min_j = max(0, self.pos[1] - self.viewRange)
@@ -26,11 +26,28 @@ class Agent:
         # get pov at this position
         if target == 2:
             viewable_map = Manager.Manager.seeker_povs[(self.pos[0], self.pos[1])]
+            list_agent: list[tuple[int, int]] = []
+            for i in range(min_i, max_i):
+                for j in range(min_j, max_j):
+                    if viewable_map[i][j] and map_data[i][j] == target:
+                        list_agent.append((i, j))
+            
+            min_dis:int = math.inf
+            min_pos = (-1, -1)
+            for pos in list_agent:
+                distance = Manager.Manager.hmaps[pos[0],pos[1]]
+                x: int = distance[self.pos[0]][self.pos[1]];
+               
+                if x < min_dis:
+                    min_dis = x
+                    min_pos = pos
+            return min_pos
         else:
             viewable_map = Manager.Manager.hider_povs[(self.pos[0], self.pos[1])]
-        for i in range(min_i, max_i):
-            for j in range(min_j, max_j):
-                if viewable_map[i][j] and map_data[i][j] == target:
-                    return (i, j)
+            for i in range(min_i, max_i):
+                for j in range(min_j, max_j):
+                    if viewable_map[i][j] and map_data[i][j] == target:
+                        return (i, j)
                 
         return (-1, -1)
+
