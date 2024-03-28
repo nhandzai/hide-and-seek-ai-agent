@@ -41,7 +41,7 @@ def main():
             if event.type == pygame.KEYDOWN:       
                 if seeker_turn:          
                     destination = seeker.scan_target(map_data, 2)
-                    if(turns==1):
+                    if(turns==1 and destination == (-1, -1)):
                         pos_dfs=seeker.find_pos_DFS(Manager.Manager.hmaps[seeker.pos] )
                     if destination == (-1, -1):
                         if(turns<5):
