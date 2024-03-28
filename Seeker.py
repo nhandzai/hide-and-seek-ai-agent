@@ -21,3 +21,10 @@ class Seeker(Agent.Agent):
                 minPath = h_value
                 dir = i
         return dir
+    def find_pos_DFS(self, map_data):
+        list_pos_dfs=[]
+        for i in range(0, len(map_data)):
+            for j in range(0, len(map_data[0])):
+                if map_data[i][j]==5:
+                    list_pos_dfs.append((i,j))
+        return random.choice(list_pos_dfs)
