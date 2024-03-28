@@ -1,47 +1,33 @@
-import Seeker
+import Agent
 import ComputeHMap
-import ReadMap
-import MyGUI
-import pygame
-
-def main():
-    mapData = ReadMap.read_map("map.txt")
-    pos = ReadMap.find_seeker(mapData)
-    seeker = Seeker.Seeker(5, pos, len(mapData), len(mapData[0]))
-    hiders_count = ReadMap.count_hiders(mapData)
+import math
+import random
+class Seeker(Agent.Agent):
+    def __init__(self, view_range, pos):
+        super().__init__(view_range, pos)
+        
+    def explore(self):
+        print("Kill me")
     
-    viewable_map = seeker.generate_viewable_map(mapData)
-
-    hider_last_seen_pos = (0, 0)    
-    destination = (-1, -1)
-    hmap = []
+    def move_wrapper(self, hmap, mapData):
+        next_direction = self.find_path(hmap)
+        self.move(mapData, next_direction)
+        
+    def find_path(self, hmap):
+        minPath = math.inf
+        dir = -1
+        for i in range(0, 8):
+            h_value = hmap[self.pos[0] + Agent.x_movement[i]][self.pos[1] + Agent.y_movement[i]]
+            if h_value != math.inf and minPath >= h_value:
+                minPath = h_value
+                dir = i
+        return dir
+    def find_pos_DFS(self, map_data):
+        list_pos_dfs=[]
+        for i in range(0, len(map_data)):
+            for j in range(0, len(map_data[0])):
+                if map_data[i][j]==5:
+                    list_pos_dfs.append((i,j))
+        return random.choice(list_pos_dfs)
+                    
     
-    screen, clock = MyGUI.create_screen_wrapper(mapData, viewable_map, seeker)
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            clock.tick(60)
-            if hiders_count == 0:
-                continue
-            if event.type == pygame.KEYDOWN:
-
-                destination = seeker.scan_target(mapData, 2)
-                if destination == (-1, -1):
-                    seeker.explore()
-                    continue
-                elif hider_last_seen_pos != destination:
-                    hider_last_seen_pos = destination
-                    hmap = ComputeHMap.compute_h_map(mapData, destination=destination)
-
-                # move the seeker
-                seeker.move_wrapper(hmap, mapData)
-                
-                viewable_map = seeker.generate_viewable_map(mapData)
-                
-                # update the map
-                screen.draw_map(mapData, viewable_map)
-
-if __name__ == '__main__':
-    main()
