@@ -106,10 +106,7 @@ class Manager():
         for hider in self.hiders:
             seeker_pos = hider.scan_target(map_data, 3)
             if (seeker_pos != (-1, -1)):
-                hider.move_wrapper(map_data, self.hmaps[self.seeker.pos], True)
-            #hider moves away from the last ping of it when the seeker is not in sight
-            elif (self.pings[hider.id] != []):
-                hider.move_wrapper(map_data, self.hmaps[self.pings[hider.id][len(self.pings[hider.id]) - 1]], True)
+                hider.move_wrapper(map_data, self.hmaps[self.seeker.pos])
 
     def check_hiders(self):
         for hider in self.hiders:
