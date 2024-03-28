@@ -1,6 +1,6 @@
 import Agent
 import math
-
+import random
 class Seeker(Agent.Agent):
     def __init__(self, view_range, pos):
         super().__init__(view_range, pos)
