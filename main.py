@@ -5,6 +5,7 @@ import Manager
 import config
 import Seeker
 import Hider
+import ComputeHMap
 
 def main():
     map_data = ReadMap.read_map("map.txt")
@@ -24,7 +25,7 @@ def main():
     turns = 1
     seeker_turn = True
     pings = manager.pings
-    pos_dfs=(-1,-1);
+    pos_dfs = (-1,-1)
     
     screen, clock = MyGUI.create_screen_wrapper(map_data, manager)
     running = True
@@ -40,20 +41,18 @@ def main():
             
             if event.type == pygame.KEYDOWN:       
                 if seeker_turn:          
-                    destination = seeker.scan_target(map_data, 2)
-                    if(turns==1 and destination == (-1, -1)):
-                        pos_dfs=seeker.find_pos_DFS(Manager.Manager.hmaps[seeker.pos] )
+                    viewable_map = seeker.generate_viewable_map(map_data)
+                    destination = seeker.scan_target(map_data, 2, viewable_map)
+                    
+                    if turns == 1 and destination == (-1, -1):
+                        pos_dfs = seeker.find_pos_DFS(ComputeHMap.compute_h_map(map_data, seeker.pos))
                     if destination == (-1, -1):
-                        if(turns<5):
-                            #print(pos_dfs)
-                            hmap=Manager.Manager.hmaps[pos_dfs] 
-                        # else:
-                        #    destination=seeker.nextDestination(pings)  
-                        seeker.explore()
+                        if turns < 5:
+                            hmap = ComputeHMap.compute_h_map(map_data, pos_dfs)
 
                     elif hider_last_seen_pos != destination:
                         hider_last_seen_pos = destination
-                        hmap = Manager.Manager.hmaps[destination]
+                        hmap = ComputeHMap.compute_h_map(map_data, destination)
 
                     # move the seeker
                     seeker.move_wrapper(hmap, map_data)
