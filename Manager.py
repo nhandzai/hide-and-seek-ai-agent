@@ -29,4 +29,5 @@ class Manager():
     def check_hiders(self):
         for hider in self.hiders:
             if (self.seeker.pos == hider.pos):
-               self.hiders.remove(hider)
+                del self.pings[hider.id]
+                self.hiders.remove(hider)
