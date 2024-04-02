@@ -93,7 +93,7 @@ def main():
                     turns += 1
 
                 # update the map
-                screen.draw_map(map_data, manager)
+                screen.draw_map(map_data, manager, pings)
                 turns += 1
 
 
