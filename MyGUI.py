@@ -13,6 +13,7 @@ SEEKER_VISION_COLOR = (223, 224, 171)
 HIDER_COLOR = (139, 219, 88)
 SPOTTED_HIDER_COLOR = (247, 181, 0)
 HIDER_VISION_COLOR = (102, 228, 237)
+INTERSECTION_VISION_COLOR = (69,96,69)
 FOG_OF_WAR = (140, 164, 171)
 WALL_COLOR = (73, 73, 92)
 
@@ -68,6 +69,14 @@ class MyScreen():
         for i in range(row):
             for j in range(col):
                 cell_color = MAP_COLOR_LIST[map_data[i][j]]
+                if seeker_pov[i][j] and config.HIDER_CAN_MOVE:
+                    for hider in manager.hiders:
+                        hider_pov = hider.generate_viewable_map(map_data)
+                        if hider_pov[i][j] and map_data[i][j] == 0:
+                            cell_color = INTERSECTION_VISION_COLOR
+                            break
+                    if cell_color == INTERSECTION_VISION_COLOR:
+                        continue
                 if seeker_pov[i][j]:
                     if map_data[i][j] == 2:
                         cell_color = SPOTTED_HIDER_COLOR
@@ -80,15 +89,30 @@ class MyScreen():
                         if hider_pov[i][j] and map_data[i][j] == 0:
                             cell_color = HIDER_VISION_COLOR
                             break
-
+                            
                 normal_map = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
-                pygame.draw.rect(self.window, cell_color, normal_map)
+                if cell_color == INTERSECTION_VISION_COLOR:
+                    draw_intersection_cell(self, normal_map)
+                else:
+                    pygame.draw.rect(self.window, cell_color, normal_map)
                 pygame.draw.rect(self.window, BLACK, normal_map, 1)
                 
         self.window.blit(self.seeker_img, pygame.Rect(seeker_pos[1] * self.block_size + self.left, seeker_pos[0] * self.block_size + self.top, self.block_size, self.block_size))
         for hider in manager.hiders:
             self.window.blit(self.hider_img, pygame.Rect(hider.pos[1] * self.block_size + self.left, hider.pos[0] * self.block_size + self.top, self.block_size, self.block_size))
         pygame.display.flip()
+
+def draw_intersection_cell(self, cell_rect:pygame.Rect):
+    # Draw left half with HIDER_VISION_COLOR
+    left_half = cell_rect.copy()
+    left_half.width //= 2
+    pygame.draw.rect(self.window, HIDER_VISION_COLOR, left_half)
+    
+    # Draw right half with SEEKER_VISION_COLOR
+    right_half = cell_rect.copy()
+    right_half.width //= 2
+    right_half.left += right_half.width
+    pygame.draw.rect(self.window, SEEKER_VISION_COLOR, right_half)
 
 def create_screen_wrapper(map_data, manager: Manager.Manager):
     pygame.init()
