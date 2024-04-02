@@ -31,3 +31,4 @@ class Manager():
             if (self.seeker.pos == hider.pos):
                 del self.pings[hider.id]
                 self.hiders.remove(hider)
+                return True
