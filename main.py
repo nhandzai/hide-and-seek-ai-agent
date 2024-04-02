@@ -6,7 +6,7 @@ import config
 import Seeker
 import Hider
 import ComputeHMap
-
+import math
 
 def main():
     map_data = ReadMap.read_map("map.txt")
@@ -30,6 +30,8 @@ def main():
     seeker_turn = True
     chasing = False
     pings = manager.pings
+    hider_range = {}
+    #hider_range = {key: [-math.inf, math.inf, -math.inf, math.inf] for key in pings}
 
     screen, clock = MyGUI.create_screen_wrapper(map_data, manager)
     running = True
@@ -61,9 +63,16 @@ def main():
                                 ComputeHMap.compute_h_map(map_data, seeker.pos)
                             )
                         else:
-                            guessing_pos = seeker.find_pos_DFS(
-                                ComputeHMap.compute_h_map(map_data, seeker.pos)
-                            )
+                            print(len(pings))
+                            if  len(pings) == 0 :
+                                guessing_pos = seeker.find_pos_DFS(
+                                    ComputeHMap.compute_h_map(map_data, seeker.pos)
+                                )
+                            else:
+                                hider_range = {key: [-math.inf, math.inf, -math.inf, math.inf] for key in pings}
+                                guessing_pos = seeker.process_pings(pings, hider_range, map_data, viewable_map)
+                                
+                                
                         hmap = ComputeHMap.compute_h_map(map_data, guessing_pos)                            
 
                     seeker.move_wrapper(hmap, map_data)
