@@ -85,7 +85,7 @@ def main():
                     seeker_turn = False
                 else:
                     # ping
-                    if turns % 5 == 0:
+                    if turns > 0 and turns % 5 == 0:
                         manager.hiders_ping(map_data)
                         print(pings)
 
@@ -97,7 +97,6 @@ def main():
 
                 # update the map
                 screen.draw_map(map_data, manager, pings)
-                turns += 1
 
 
 if __name__ == "__main__":
