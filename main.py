@@ -74,6 +74,9 @@ def main():
  
                     viewable_map = seeker.generate_viewable_map(map_data)
                     destination = seeker.scan_target(map_data, 2, viewable_map)
+
+                    manager.delete_seen_pings(viewable_map)
+
                     if hider_last_seen_pos != (-1, -1) or destination != (-1, -1):
                         chasing = True
                         if destination != (-1,-1):

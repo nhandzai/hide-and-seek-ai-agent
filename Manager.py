@@ -1,5 +1,5 @@
 import Hider
-import Seeker
+from Seeker import Seeker
 import ComputeHMap
 
 class Manager():
@@ -32,3 +32,8 @@ class Manager():
                 del self.pings[hider.id]
                 self.hiders.remove(hider)
                 return True
+            
+    def delete_seen_pings(self, seeker_pov):    
+        for hider_id, pings in self.pings.items():
+            unseen_pings = [ping for ping in pings if not seeker_pov[ping[0]][ping[1]]]
+            self.pings[hider_id] = unseen_pings
