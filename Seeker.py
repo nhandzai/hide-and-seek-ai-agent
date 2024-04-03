@@ -61,6 +61,7 @@ class Seeker(Agent.Agent):
                 hider_range[key][2] = max(0, value[1] - config.HIDER_PING_RANGE, hider_range[key][2])
                 hider_range[key][3] = min(len(map_data[0]), value[1] + config.HIDER_PING_RANGE + 1, hider_range[key][3])
         
+        for key in pings:
             hmap=ComputeHMap.compute_h_map(map_data, self.pos)
             min_val_ping=math.inf
             min_cell_ping=(-1,-1)
@@ -68,25 +69,26 @@ class Seeker(Agent.Agent):
             for i, value in enumerate(pings[key]):
                 if(self.pos==value):
                     pings[key].remove(value)
+                    i-=1
                     continue
                 if hider_range[key][0]<=value[0] or hider_range[key][1]>=value[0] or hider_range[key][2]<=value[0] or hider_range[key][3]>=value[0]:
                     min_val = math.inf
                     min_cell =(-1,-1)
-                  #  for x2 in range(min_i, max_i):
+                    #  for x2 in range(min_i, max_i):
             #for y2 in range(min_j, max_j):
-                    for x in range(hider_range[key][1], hider_range[key][0]):
-                        for y in range(hider_range[key][3], hider_range[key][2]):
-                            if hmap[x][y] < min_val:
+                    for x in range(hider_range[key][0], hider_range[key][1]):
+                        for y in range(hider_range[key][2], hider_range[key][3]):
+                            if hmap[x][y] < min_val and hmap[x][y]!=0:
                                 min_val = hmap[x][y]
                                 min_cell = (x,y)
-                        if min_cell != math.inf and min_cell not in pings[key]:
-                            pings[key][i] = min_cell
-                        else:
-                            pings[key].remove(value)
-                if hmap[value[0]][value[1]] < min_val_ping:
+                    if min_val != math.inf and min_cell not in pings[key]:
+                        pings[key][i] = min_cell
+                    
+                        
+                if hmap[value[0]][value[1]] < min_val_ping  and hmap[value[0]][value[1]]!= 0:
                     min_val_ping = hmap[value[0]][value[1]]
                     min_cell_ping = value
-                    print(min_cell_ping)
+                
         return min_cell_ping
                 
             
