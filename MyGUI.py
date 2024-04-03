@@ -3,33 +3,34 @@ import math
 import Manager
 import config
 
-WIDTH = 1368
-HEIGHT = 768
+SCREEN_WIDTH = 1366
+SCREEN_HEIGHT = 768
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-SEEKER_COLOR = (242, 75, 97)
-SEEKER_VISION_COLOR = (223, 224, 171)
-HIDER_COLOR = (139, 219, 88)
-SPOTTED_HIDER_COLOR = (247, 181, 0)
-HIDER_VISION_COLOR = (102, 228, 237)
-FOG_OF_WAR = (140, 164, 171)
-WALL_COLOR = (73, 73, 92)
-
-MAP_COLOR_LIST = [WHITE, WALL_COLOR, HIDER_COLOR, SEEKER_COLOR]
+BG_COLOR = (160, 160, 160)
+BLACK = (0, 0, 0, 200)
+SEEKER_COLOR = (242, 75, 97, 160)
+SEEKER_VISION_COLOR = (255, 96, 81, 160)
+HIDER_COLOR = (139, 219, 88, 160)
+HIDER_VISION_COLOR = (59, 50, 157, 160)
+OVERLAP_VISION_COLOR = (200, 48, 109, 160)
 
 class MyScreen():   
     def __init__(self, map_data):
-        self.window = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption("Hide and seek, group 1")
         self.top = 0
         self.left = 0
         self.block_size = 0
         self.do_math(map_data)
-        self.seeker_img = pygame.image.load('images\\seeker.jpg').convert()
-        self.seeker_img = pygame.transform.scale(self.seeker_img, (self.block_size, self.block_size))
-        self.hider_img = pygame.image.load('images\\hider.jpg').convert()
-        self.hider_img = pygame.transform.scale(self.hider_img, (self.block_size, self.block_size))
-
+        
+        self.seeker_img = None
+        self.hider_img = None
+        self.wall_texture = None
+        self.floor_texture = None
+        self.load_images()
+        
+        self.window.blit(self.floor_texture, (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))        
+        
     def do_math(self, map_data: list):
         n = len(map_data)
         m = len(map_data[0])
@@ -55,39 +56,80 @@ class MyScreen():
             self.left = 0
 
         self.block_size = int(math.sqrt((m * n) / (row * col)))
-
-    def draw_map(self, map_data: list, manager: Manager.Manager):
-        self.window.fill(WHITE)
         
+    def load_images(self):
+        self.seeker_img = pygame.image.load('images\\seeker.png').convert_alpha()
+        self.seeker_img = pygame.transform.scale(self.seeker_img, (self.block_size, self.block_size))
+        self.hider_img = pygame.image.load('images\\hider.png').convert_alpha()
+        self.hider_img = pygame.transform.scale(self.hider_img, (self.block_size, self.block_size))
+        self.floor_texture = pygame.image.load('images\\floor_texture.png').convert()
+        self.floor_texture = pygame.transform.scale(self.floor_texture, (self.block_size, self.block_size))
+        self.wall_texture = pygame.image.load('images\\wall_texture.png').convert()
+        self.wall_texture = pygame.transform.scale(self.wall_texture, (self.block_size, self.block_size))
+        
+    def seen_by_hider(self, map_data, i, j, manager: Manager.Manager):
+        for hider in manager.hiders:
+            hider_pov = hider.generate_viewable_map(map_data)
+            if hider_pov[i][j]:
+                return True
+        return False
+        
+    def draw_map(self, map_data: list, manager: Manager.Manager):
+        self.window.fill(BG_COLOR)
         row = len(map_data)
         col = len(map_data[0])
+        
+        # surface to draw transparent shapes
+        trans_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
         
         # draw maps
         seeker_pos = manager.seeker.pos
         seeker_pov = manager.seeker.generate_viewable_map(map_data)
         for i in range(row):
             for j in range(col):
-                cell_color = MAP_COLOR_LIST[map_data[i][j]]
-                if seeker_pov[i][j]:
-                    if map_data[i][j] == 2:
-                        cell_color = SPOTTED_HIDER_COLOR
-                    elif map_data[i][j] == 0:
-                        cell_color = SEEKER_VISION_COLOR
-                        
-                elif config.HIDER_CAN_MOVE:
-                    for hider in manager.hiders:
-                        hider_pov = hider.generate_viewable_map(map_data)
-                        if hider_pov[i][j] and map_data[i][j] == 0:
-                            cell_color = HIDER_VISION_COLOR
-                            break
-
-                normal_map = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
-                pygame.draw.rect(self.window, cell_color, normal_map)
-                pygame.draw.rect(self.window, BLACK, normal_map, 1)
+                if map_data[i][j] == 1:
+                    self.window.blit(self.wall_texture, (j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size))                    
                 
-        self.window.blit(self.seeker_img, pygame.Rect(seeker_pos[1] * self.block_size + self.left, seeker_pos[0] * self.block_size + self.top, self.block_size, self.block_size))
+                elif map_data[i][j] == 4:
+                    pass
+                
+                else:
+                    self.window.blit(self.floor_texture, (j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size))
+
+                    cell_color = None
+                    seen_by_hider = self.seen_by_hider(map_data, i, j, manager)
+                    
+                    if seeker_pov[i][j] and seen_by_hider:
+                        if map_data[i][j] != 2 and map_data[i][j] != 3:
+                            cell_color = OVERLAP_VISION_COLOR
+                        elif map_data[i][j] == 2:
+                            cell_color = SEEKER_VISION_COLOR
+                        else:
+                            cell_color = HIDER_VISION_COLOR
+                        drawing_rect = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
+                        pygame.draw.rect(trans_surface, cell_color, drawing_rect)  
+                        
+                    elif seeker_pov[i][j]:
+                        if map_data[i][j] == 3:
+                            cell_color = SEEKER_COLOR
+                        else:
+                            cell_color = SEEKER_VISION_COLOR
+                        drawing_rect = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
+                        pygame.draw.rect(trans_surface, cell_color, drawing_rect)  
+                    
+                    elif seen_by_hider:
+                        if map_data[i][j] == 2:
+                            cell_color = HIDER_COLOR
+                        else: 
+                            cell_color = HIDER_VISION_COLOR
+                        drawing_rect = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
+                        pygame.draw.rect(trans_surface, cell_color, drawing_rect)  
+                        
+        trans_surface.blit(self.seeker_img, pygame.Rect(seeker_pos[1] * self.block_size + self.left, seeker_pos[0] * self.block_size + self.top, self.block_size, self.block_size))
         for hider in manager.hiders:
-            self.window.blit(self.hider_img, pygame.Rect(hider.pos[1] * self.block_size + self.left, hider.pos[0] * self.block_size + self.top, self.block_size, self.block_size))
+            trans_surface.blit(self.hider_img, pygame.Rect(hider.pos[1] * self.block_size + self.left, hider.pos[0] * self.block_size + self.top, self.block_size, self.block_size))
+
+        self.window.blit(trans_surface, (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.flip()
 
 def create_screen_wrapper(map_data, manager: Manager.Manager):
