@@ -15,6 +15,8 @@ SPOTTED_HIDER_COLOR = (247, 181, 0)
 HIDER_VISION_COLOR = (102, 228, 237)
 FOG_OF_WAR = (140, 164, 171)
 WALL_COLOR = (73, 73, 92)
+PING_DOT_RADIUS = 5  
+PING_DOT_COLOR = (255, 0, 0) 
 
 MAP_COLOR_LIST = [WHITE, WALL_COLOR, HIDER_COLOR, SEEKER_COLOR]
 
@@ -56,7 +58,7 @@ class MyScreen():
 
         self.block_size = int(math.sqrt((m * n) / (row * col)))
 
-    def draw_map(self, map_data: list, manager: Manager.Manager):
+    def draw_map(self, map_data: list, manager: Manager.Manager, ping_list: dict = None):
         self.window.fill(WHITE)
         
         row = len(map_data)
@@ -84,6 +86,12 @@ class MyScreen():
                 normal_map = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
                 pygame.draw.rect(self.window, cell_color, normal_map)
                 pygame.draw.rect(self.window, BLACK, normal_map, 1)
+                #ping the cell
+                if(ping_list != None):
+                    for pings in ping_list.values():
+                        for ping in pings:
+                            if (i, j) == ping:
+                                pygame.draw.circle(self.window, PING_DOT_COLOR, (j * self.block_size + self.left + self.block_size / 2, i * self.block_size + self.top + self.block_size / 2), PING_DOT_RADIUS)
                 
         self.window.blit(self.seeker_img, pygame.Rect(seeker_pos[1] * self.block_size + self.left, seeker_pos[0] * self.block_size + self.top, self.block_size, self.block_size))
         for hider in manager.hiders:
