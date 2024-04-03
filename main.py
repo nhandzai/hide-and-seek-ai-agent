@@ -6,9 +6,9 @@ import config
 import Seeker
 import Hider
 import ComputeHMap
-import math
 
-def main():
+
+def main(): 
     map_data = ReadMap.read_map("map.txt")
     seeker = Seeker.Seeker(config.SEEKER_VIEW_RANGE, ReadMap.find_seeker(map_data))
     hiders_pos = ReadMap.find_hiders(map_data)
@@ -30,8 +30,6 @@ def main():
     seeker_turn = True
     chasing = False
     pings = manager.pings
-    hider_range = {}
-    #hider_range = {key: [-math.inf, math.inf, -math.inf, math.inf] for key in pings}
 
     screen, clock = MyGUI.create_screen_wrapper(map_data, manager)
     running = True
@@ -63,16 +61,9 @@ def main():
                                 ComputeHMap.compute_h_map(map_data, seeker.pos)
                             )
                         else:
-                            print(len(pings))
-                            if  len(pings) == 0 :
-                                guessing_pos = seeker.find_pos_DFS(
-                                    ComputeHMap.compute_h_map(map_data, seeker.pos)
-                                )
-                            else:
-                                hider_range = {key: [-math.inf, math.inf, -math.inf, math.inf] for key in pings}
-                                guessing_pos = seeker.process_pings(pings, hider_range, map_data, viewable_map)
-                                
-                                
+                            guessing_pos = seeker.find_pos_DFS(
+                                ComputeHMap.compute_h_map(map_data, seeker.pos)
+                            )
                         hmap = ComputeHMap.compute_h_map(map_data, guessing_pos)                            
 
                     seeker.move_wrapper(hmap, map_data)
@@ -83,6 +74,9 @@ def main():
  
                     viewable_map = seeker.generate_viewable_map(map_data)
                     destination = seeker.scan_target(map_data, 2, viewable_map)
+
+                    manager.delete_seen_pings(viewable_map)
+
                     if hider_last_seen_pos != (-1, -1) or destination != (-1, -1):
                         chasing = True
                         if destination != (-1,-1):
