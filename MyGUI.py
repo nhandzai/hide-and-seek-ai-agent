@@ -86,6 +86,7 @@ class MyScreen():
                 normal_map = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
                 pygame.draw.rect(self.window, cell_color, normal_map)
                 pygame.draw.rect(self.window, BLACK, normal_map, 1)
+                #ping the cell
                 if(ping_list != None):
                     for pings in ping_list.values():
                         for ping in pings:
