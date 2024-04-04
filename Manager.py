@@ -1,5 +1,5 @@
 import Hider
-from Seeker import Seeker
+import Seeker
 import ComputeHMap
 
 class Manager():
@@ -22,18 +22,20 @@ class Manager():
         for hider in self.hiders:
             viewable_map = hider.generate_viewable_map(map_data)
             seeker_pos = hider.scan_target(map_data, 3, viewable_map)
-            if (seeker_pos != (-1, -1)):
+            if seeker_pos != (-1, -1):
                 hmap = ComputeHMap.compute_h_map(map_data, self.seeker.pos)
                 hider.move_wrapper(map_data, hmap)
 
     def check_hiders(self):
         for hider in self.hiders:
-            if (self.seeker.pos == hider.pos):
+            if self.seeker.pos == hider.pos:
                 del self.pings[hider.id]
                 self.hiders.remove(hider)
                 return True
             
-    def delete_seen_pings(self, seeker_pov):    
-        for hider_id, pings in self.pings.items():
-            unseen_pings = [ping for ping in pings if not seeker_pov[ping[0]][ping[1]]]
-            self.pings[hider_id] = unseen_pings
+    def delete_seen_pings(self, destination):    
+        if destination != (-1, -1):
+            for hider in self.hiders:
+                if hider.pos == destination:
+                    self.pings[hider.id] = []
+                    break
