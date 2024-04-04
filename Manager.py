@@ -39,7 +39,7 @@ class Manager():
                 if hider.pos == destination:
                     self.pings[hider.id] = []
                     break
-     def delete_seen_hider(self, seeker_pov,map_data,hider_range,cells_visited):    
+    def delete_seen_hider(self, seeker_pov,map_data,hider_range,cells_visited):    
         min_i = max(0, self.seeker.pos[0] - self.seeker.viewRange)
         max_i = min(len(seeker_pov), self.seeker.pos[0] + self.seeker.viewRange + 1)
         min_j = max(0, self.seeker.pos[1] - self.seeker.viewRange)
