@@ -8,9 +8,6 @@ class Seeker(Agent.Agent):
     def __init__(self, view_range, pos):
         super().__init__(view_range, pos)
 
-    def explore(self):
-        print("Kill me")
-
     def move_wrapper(self, hmap, mapData):
         next_direction = self.find_path(hmap)
         self.move(mapData, next_direction)
@@ -35,26 +32,11 @@ class Seeker(Agent.Agent):
                     list_pos_dfs.append((i, j))
         return random.choice(list_pos_dfs)
 
-    def find_pos_ping(self, pings: dict,map_data,viewable_map):
-        first_key = next(iter(pings))
-        first_value = pings[first_key]
-
-        if len(first_value) == 0:
-            return (0, 0)
-        elif len(first_value) == 1:
-            return first_value[0]
-        else:
-            a = PingPosHandle.final_destination(first_value,map_data,viewable_map)
-            if not a:
-                return 0,0
-            # cho nay chua biet lam j nen cu lam v 
-            return a[0]
     def process_pings(self,pings, hider_range, map_data, cells_visited):
         # kiem tra xem co bao nhieu key trong pings 
         #khoi tao hider_range`
        
         for key in pings:
-            
             for value in pings[key]:
                 hider_range[key][0] = max(0, value[0] - config.HIDER_PING_RANGE,hider_range[key][0])
                 hider_range[key][1] = min(len(map_data), value[0] + config.HIDER_PING_RANGE + 1, hider_range[key][1])
@@ -111,10 +93,3 @@ class Seeker(Agent.Agent):
         if(min_val_ping==1):
             cells_visited[min_key].append(value)
         return min_cell_ping
-                
-            
-                   
-            
-            
-                
-              
