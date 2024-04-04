@@ -35,8 +35,8 @@ class Seeker(Agent.Agent):
     def process_pings(self,pings, hider_range, map_data, cells_visited):
         # kiem tra xem co bao nhieu key trong pings 
         #khoi tao hider_range`
-       
         for key in pings:
+            
             for value in pings[key]:
                 hider_range[key][0] = max(0, value[0] - config.HIDER_PING_RANGE,hider_range[key][0])
                 hider_range[key][1] = min(len(map_data), value[0] + config.HIDER_PING_RANGE + 1, hider_range[key][1])
@@ -48,16 +48,14 @@ class Seeker(Agent.Agent):
         cop_pings=copy.deepcopy(pings)
         hmap=ComputeHMap.compute_h_map(map_data, self.pos)
         for key in cop_pings:
+            if(self.pos not in cells_visited[key]): 
+                 cells_visited[key].append(self.pos)
             for i, value in enumerate(cop_pings[key]):
                 if(self.pos==value):
-                    if hider_range[key][0]<=value[0] and hider_range[key][1]>=value[0] or hider_range[key][2]<=value[1] or hider_range[key][3]>=value[1]:
-                        if(value not in cells_visited[key]): 
-                            cells_visited[key].append(value)
                     cop_pings[key].remove(value)
                     pings[key].remove(value)
                     i-=1
                     continue
-          
                 if hider_range[key][0]>value[0] or hider_range[key][1]<value[0] or hider_range[key][2]>value[1] or hider_range[key][3]<value[1]:
                     min_val = math.inf
                     min_cell =(-1,-1)
@@ -90,6 +88,5 @@ class Seeker(Agent.Agent):
                     min_cell_ping = value
                     min_key = key
       #neu turn tiep theo den diem nay   
-        if(min_val_ping==1):
-            cells_visited[min_key].append(value)
         return min_cell_ping
+                
