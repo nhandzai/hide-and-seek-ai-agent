@@ -9,7 +9,7 @@ import ComputeHMap
 import math
 
 def main():
-    map_data = ReadMap.read_map("map1_1.txt")
+    map_data = ReadMap.read_map("map.txt")
     seeker = Seeker.Seeker(config.SEEKER_VIEW_RANGE, ReadMap.find_seeker(map_data))
     hiders_pos = ReadMap.find_hiders(map_data)
     hiders = []
@@ -111,7 +111,7 @@ def main():
             turns += 1
 
         # update the map
-        screen.draw_map(map_data, manager, pings)
+        screen.draw_map(map_data, manager)
 
 if __name__ == "__main__":
     main()
