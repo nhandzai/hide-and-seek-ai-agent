@@ -16,12 +16,14 @@ class Seeker(Agent.Agent):
         minPath = math.inf
         dir = -1
         for i in range(0, 8):
-            h_value = hmap[self.pos[0] + Agent.x_movement[i]][
-                self.pos[1] + Agent.y_movement[i]
-            ]
-            if h_value != math.inf and minPath >= h_value:
-                minPath = h_value
-                dir = i
+            if(self.pos[0] + Agent.x_movement[i] >= 0 and self.pos[0] + Agent.x_movement[i] < len(hmap) 
+            and self.pos[1] + Agent.y_movement[i] >= 0 and self.pos[1] + Agent.y_movement[i] < len(hmap[0])):
+                h_value = hmap[self.pos[0] + Agent.x_movement[i]][
+                    self.pos[1] + Agent.y_movement[i]
+                ]
+                if h_value != math.inf and minPath >= h_value:
+                    minPath = h_value
+                    dir = i
         return dir
 
     def find_pos_DFS(self, map_data):
