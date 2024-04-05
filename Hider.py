@@ -31,10 +31,11 @@ class Hider(Agent.Agent):
             new_x = self.pos[0] + Agent.x_movement[i]
             new_y = self.pos[1] + Agent.y_movement[i]
             # i = 8 is when the hider stands still (prepare to get caught)
-            if map[new_x][new_y] == 2 and i < 8:
-                continue
-            h_value = hmap[new_x][new_y]
-            if h_value != math.inf and maxPath < h_value:
-                maxPath = h_value
-                dir = i            
+            if new_x >= 0 and new_x < len(map) and new_y >= 0 and new_y < len(map[0]):
+                if map[new_x][new_y] == 2 and i < 8:
+                    continue
+                h_value = hmap[new_x][new_y]
+                if h_value != math.inf and maxPath < h_value:
+                    maxPath = h_value
+                    dir = i            
         return dir
