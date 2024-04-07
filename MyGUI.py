@@ -8,6 +8,7 @@ SCREEN_HEIGHT = 768
 
 BG_COLOR = (160, 160, 160)
 BLACK = (0, 0, 0, 200)
+TEXT_COLOR = (255, 0, 0)
 SEEKER_COLOR = (242, 75, 97, 160)
 SEEKER_VISION_COLOR = (255, 96, 81, 160)
 HIDER_COLOR = (139, 219, 88, 160)
@@ -17,7 +18,6 @@ OVERLAP_VISION_COLOR = (200, 48, 109, 160)
 class MyScreen():   
     def __init__(self, map_data):
         self.window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.result_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
         pygame.display.set_caption("Hide and seek, group 1")
         self.top = 0
         self.left = 0
@@ -142,15 +142,15 @@ class MyScreen():
             font_size = config.GAME_OVER_FONT_SIZE
         else:
             font_size = config.IN_GAME_FONT_SIZE
-        font = pygame.font.Font('fonts\\calibri.ttf', font_size)
+        font = pygame.font.Font('fonts\\joystix monospace.ttf', font_size)
         
-        game_points = font.render(f'GAME POINTS: {points}', True, BLACK, BG_COLOR)
+        game_points = font.render(f'GAME POINTS: {points}', True, TEXT_COLOR)
         game_points_rect = game_points.get_rect()
         
-        caught = font.render(f'CAUGHT: {caught_number}', True, BLACK, BG_COLOR)
+        caught = font.render(f'CAUGHT: {caught_number}', True, TEXT_COLOR)
         caught_rect = caught.get_rect()
         
-        steps = font.render(f'STEPS TAKEN: {turns}', True, BLACK, BG_COLOR)
+        steps = font.render(f'STEPS TAKEN: {turns}', True, TEXT_COLOR)
         steps_rect = steps.get_rect()
         
         if game_over:
