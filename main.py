@@ -7,9 +7,10 @@ import Seeker
 import Hider
 import ComputeHMap
 import math
+import Obstacle
 
 def main():
-    map_data = ReadMap.read_map("map.txt")
+    map_data,obsts_list = ReadMap.read_map("map.txt")
     seeker = Seeker.Seeker(config.SEEKER_VIEW_RANGE, ReadMap.find_seeker(map_data))
     hiders_pos = ReadMap.find_hiders(map_data)
     hiders = []
@@ -20,7 +21,7 @@ def main():
         )
         id += 1
 
-    manager = Manager.Manager(seeker, hiders, map_data)
+    manager = Manager.Manager(seeker, hiders, map_data,obsts_list)
 
     hider_last_seen_pos = (-1, -1)
     destination = (-1, -1)

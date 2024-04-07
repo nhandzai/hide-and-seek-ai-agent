@@ -1,14 +1,17 @@
 import math
 import ComputeHMap
+import Obstacle
 
 # the final movement is only used by hider
 x_movement = [-1, -1, -1, 0, 0, 1, 1, 1, 0]
 y_movement = [-1, 0, 1, -1, 1, -1, 0, 1, 0]
 
 class Agent:
+    
     def __init__(self, viewRange: int, pos: tuple):
         self.viewRange = viewRange
         self.pos = pos
+        self.want_connecting = False
         
     def move(self, map, dir):
         if( dir >= 0):
