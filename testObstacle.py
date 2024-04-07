@@ -54,5 +54,15 @@ for obst in manager.obsts:
 print("Seeker dang dinh voi ",seeker.myObst)    
 
 
+# nho check connecting sau khi move
+# neu is_connect sau kho move = false thi phai tim vat can do ma dinh no lan thu 2
+seeker.myObst.moveObstacle(map_data,7)
+seeker.myObst.connecting(map_data,manager)
+# if seeker.myObst.connecting(map_data,manager) == False
+    # ham tim kim obst gan nhat (cung phai tinh toan lai cho can bo vat can) va chay lai no
+
+for row in map_data:
+    print(row)
+
 
 

@@ -1,5 +1,8 @@
-import Agent
 import Manager
+
+
+x_movement = [-1, -1, -1, 0, 0, 1, 1, 1, 0]
+y_movement = [-1, 0, 1, -1, 1, -1, 0, 1, 0]
 
 
 class Obstacle:
@@ -25,6 +28,37 @@ class Obstacle:
                         self.is_connect = True
                         self.pos_mover = (i, j)
                         return True
+        self.is_connect = False
+        return False
+
+    # sau khi move cần phải check connecting 1 lần nữa để xem nó có còn dính với vật cản không
+    # vì có trường hợp agent ko thể cùng di chuyển với vật cản
+    def moveObstacle(self, mapData, dir):
+        if dir >= 0 and self.is_connect == True:
+            oldTopLeft = self.topLeft
+            temp = mapData[self.pos_mover[0]][self.pos_mover[1]]
+            self.topLeft = (
+                self.topLeft[0] + x_movement[dir],
+                self.topLeft[1] + y_movement[dir],
+            )
+
+            for i in range(oldTopLeft[0], oldTopLeft[0] + self.height):
+                for j in range(oldTopLeft[1], oldTopLeft[1] + self.width):
+                    mapData[i][j] = 0
+
+            for i in range(self.topLeft[0], self.topLeft[0] + self.height):
+                for j in range(self.topLeft[1], self.topLeft[1] + self.width):
+                    mapData[i][j] = 4
+            newPosMover = (
+                self.pos_mover[0] + x_movement[dir],
+                self.pos_mover[1] + y_movement[dir],
+            )
+            if mapData[newPosMover[0]][newPosMover[1]] == 0:
+                mapData[self.pos_mover[0]][self.pos_mover[1]] = 0
+                self.pos_mover = newPosMover
+                mapData[self.pos_mover[0]][self.pos_mover[1]] = temp
+
+            return True
         return False
 
     def isWantConnect(self, agent):
