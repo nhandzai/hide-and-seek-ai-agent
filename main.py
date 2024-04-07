@@ -10,7 +10,7 @@ import math
 import Obstacle
 
 def main():
-    map_data,obsts_list = ReadMap.read_map("map.txt")
+    map_data,obsts_list = ReadMap.read_map("map1_1.txt")
     seeker = Seeker.Seeker(config.SEEKER_VIEW_RANGE, ReadMap.find_seeker(map_data))
     hiders_pos = ReadMap.find_hiders(map_data)
     hiders = []
@@ -43,10 +43,12 @@ def main():
                 continue
             clock.tick(60)
 
-        if len(manager.hiders) == 0:
+        if len(manager.hiders) == 0 or turns == config.TIME_LIMIT:
+            caught_number = id - 1 - len(hiders)
+            screen.display_score(map_data, manager, turns, caught_number, True)
             continue
 
-        pygame.time.delay(50)
+        pygame.time.delay(config.STEP_INTERVAL)
         if seeker_turn:
             viewable_map = seeker.generate_viewable_map(map_data)
             destination = seeker.scan_target(map_data, 2, viewable_map)
@@ -111,8 +113,9 @@ def main():
             seeker_turn = True
             turns += 1
 
-        # update the map
+        # update the screen
         screen.draw_map(map_data, manager)
+        screen.display_score(map_data, manager, turns, id - 1 - len(hiders))
 
 if __name__ == "__main__":
     main()

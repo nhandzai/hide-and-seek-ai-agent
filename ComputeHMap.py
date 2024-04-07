@@ -14,16 +14,12 @@ def compute_h_map(mapData, destination):
             new_x, new_y = x + dx, y + dy
             if (new_x, new_y) != destination:
                 if 0 <= new_x < rows and 0 <= new_y < cols :
-                    if mapData[new_x][new_y] != 1  :
+                    if mapData[new_x][new_y] != 1 and mapData[new_x][new_y] != 4:
                         if map[x][y]+1 < map[new_x][new_y] or map[new_x][new_y] == 0:
                             map[new_x][new_y] = map[x][y] + 1
                             queue.append((new_x,new_y))
                             
                     else:
-                        if mapData[new_x][new_y] == 1:
-                            map[new_x][new_y] = math.inf
+                        map[new_x][new_y] = math.inf
                
-                   
     return map
-
-

@@ -17,6 +17,7 @@ OVERLAP_VISION_COLOR = (200, 48, 109, 160)
 class MyScreen():   
     def __init__(self, map_data):
         self.window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.result_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
         pygame.display.set_caption("Hide and seek, group 1")
         self.top = 0
         self.left = 0
@@ -28,6 +29,8 @@ class MyScreen():
         self.wall_texture = None
         self.floor_texture = None
         self.load_images()
+        
+        self.displaying_score = False
         
         self.window.blit(self.floor_texture, (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))        
         
@@ -91,7 +94,8 @@ class MyScreen():
                     self.window.blit(self.wall_texture, (j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size))                    
                 
                 elif map_data[i][j] == 4:
-                    pass
+                    drawing_rect = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
+                    pygame.draw.rect(trans_surface, BLACK, drawing_rect)  
                 
                 else:
                     self.window.blit(self.floor_texture, (j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size))
@@ -130,6 +134,41 @@ class MyScreen():
             trans_surface.blit(self.hider_img, pygame.Rect(hider.pos[1] * self.block_size + self.left, hider.pos[0] * self.block_size + self.top, self.block_size, self.block_size))
 
         self.window.blit(trans_surface, (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.flip()
+        
+    def display_score(self, map_data, manager, turns = 0, caught_number = 0, game_over = False):
+        points = - turns + 20 * caught_number + config.DEFAULT_POINTS
+        if game_over:
+            font_size = config.GAME_OVER_FONT_SIZE
+        else:
+            font_size = config.IN_GAME_FONT_SIZE
+        font = pygame.font.Font('fonts\\calibri.ttf', font_size)
+        
+        game_points = font.render(f'GAME POINTS: {points}', True, BLACK, BG_COLOR)
+        game_points_rect = game_points.get_rect()
+        
+        caught = font.render(f'CAUGHT: {caught_number}', True, BLACK, BG_COLOR)
+        caught_rect = caught.get_rect()
+        
+        steps = font.render(f'STEPS TAKEN: {turns}', True, BLACK, BG_COLOR)
+        steps_rect = steps.get_rect()
+        
+        if game_over:
+            game_points_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - font_size)
+            caught_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+            steps_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + font_size)
+        else:
+            game_points_rect.topleft = (0, 10)
+            caught_rect.topleft = (0, 10 + font_size)
+            steps_rect.topleft = (0, 10 + 2 * font_size)
+        
+        if game_over and self.displaying_score == False:
+            self.displaying_score = True
+            self.draw_map(map_data, manager)
+            
+        self.window.blit(game_points, game_points_rect)
+        self.window.blit(caught, caught_rect)
+        self.window.blit(steps, steps_rect)
         pygame.display.flip()
 
 def create_screen_wrapper(map_data, manager: Manager.Manager):
