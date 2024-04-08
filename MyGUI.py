@@ -14,6 +14,8 @@ SEEKER_VISION_COLOR = (255, 96, 81, 160)
 HIDER_COLOR = (139, 219, 88, 160)
 HIDER_VISION_COLOR = (59, 50, 157, 160)
 OVERLAP_VISION_COLOR = (200, 48, 109, 160)
+PING_DOT_RADIUS = 12  
+PING_DOT_COLOR = (255, 0, 0)
 
 class MyScreen():   
     def __init__(self, map_data):
@@ -138,7 +140,13 @@ class MyScreen():
 
         self.window.blit(trans_surface, (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.flip()
-        
+
+    def draw_ping(self, ping_list):
+        if(ping_list != None):
+            for pings in ping_list.values():
+                for ping in pings:
+                    pygame.draw.circle(self.window, PING_DOT_COLOR, (ping[1] * self.block_size + self.left + self.block_size / 2, ping[0] * self.block_size + self.top + self.block_size / 2), PING_DOT_RADIUS)
+
     def display_score(self, map_data, manager, turns = 0, caught_number = 0, game_over = False):
         points = - turns + 20 * caught_number + config.DEFAULT_POINTS
         if game_over:

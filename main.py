@@ -115,6 +115,8 @@ def main():
 
         # update the screen
         screen.draw_map(map_data, manager)
+        if turns > 1 and turns % 5 == 1:
+            screen.draw_ping(pings)
         screen.display_score(map_data, manager, turns, id - 1 - len(hiders))
 
 if __name__ == "__main__":
