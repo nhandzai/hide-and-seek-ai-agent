@@ -28,6 +28,7 @@ class MyScreen():
         self.hider_img = None
         self.wall_texture = None
         self.floor_texture = None
+        self.obstacle_texture = None
         self.load_images()
         
         self.displaying_score = False
@@ -69,6 +70,8 @@ class MyScreen():
         self.floor_texture = pygame.transform.scale(self.floor_texture, (self.block_size, self.block_size))
         self.wall_texture = pygame.image.load('images\\wall_texture.png').convert()
         self.wall_texture = pygame.transform.scale(self.wall_texture, (self.block_size, self.block_size))
+        self.obstacle_texture = pygame.image.load('images\\obstacle.png').convert_alpha()
+        self.obstacle_texture = pygame.transform.scale(self.obstacle_texture, (self.block_size, self.block_size))
         
     def seen_by_hider(self, map_data, i, j, manager: Manager.Manager):
         for hider in manager.hiders:
@@ -93,13 +96,13 @@ class MyScreen():
                 if map_data[i][j] == 1:
                     self.window.blit(self.wall_texture, (j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size))                    
                 
-                elif map_data[i][j] == 4:
-                    drawing_rect = pygame.Rect(j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size)
-                    pygame.draw.rect(trans_surface, BLACK, drawing_rect)  
-                
                 else:
                     self.window.blit(self.floor_texture, (j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size))
 
+                    if map_data[i][j] == 4:
+                        trans_surface.blit(self.obstacle_texture, (j * self.block_size + self.left, i * self.block_size + self.top, self.block_size, self.block_size))
+                        continue
+                    
                     cell_color = None
                     seen_by_hider = self.seen_by_hider(map_data, i, j, manager)
                     

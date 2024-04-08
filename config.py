@@ -3,7 +3,7 @@ SEEKER_VIEW_RANGE = 3
 HIDER_VIEW_RANGE = 2
 HIDER_PING_RANGE = 3
 
-TIME_LIMIT = 20
+TIME_LIMIT = -1 # -1 means no time limit
 STEP_INTERVAL = 50 # ms between each steps
 DEFAULT_POINTS = 100
 
