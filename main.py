@@ -2,22 +2,23 @@ import ReadMap
 import MyGUI
 import pygame
 import Manager
-import config
 import Seeker
 import Hider
 import ComputeHMap
 import math
 import Obstacle
+import SetLevelMap
 
 def main():
+    config = SetLevelMap.choose_level()
     map_data,obsts_list = ReadMap.read_map("map1_1.txt")
-    seeker = Seeker.Seeker(config.SEEKER_VIEW_RANGE, ReadMap.find_seeker(map_data))
+    seeker = Seeker.Seeker(config["SEEKER_VIEW_RANGE"], ReadMap.find_seeker(map_data))
     hiders_pos = ReadMap.find_hiders(map_data)
     hiders = []
     id = 1
     for pos in hiders_pos:
         hiders.append(
-            Hider.Hider(config.HIDER_VIEW_RANGE, pos, config.HIDER_CAN_MOVE, id)
+            Hider.Hider(config["HIDER_VIEW_RANGE"], pos, config["HIDER_CAN_MOVE"], id)
         )
         id += 1
 
@@ -35,20 +36,27 @@ def main():
     cells_visited={}
     screen, clock = MyGUI.create_screen_wrapper(map_data, manager)
     running = True
+    first_input = False
 
     while running:
+        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
                 continue
-            clock.tick(60)
+            
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                first_input = True
 
-        if len(manager.hiders) == 0 or turns == config.TIME_LIMIT:
+        if first_input == False:
+            continue
+        
+        if len(manager.hiders) == 0 or turns == config["TIME_LIMIT"]:
             caught_number = id - 1 - len(hiders)
-            screen.display_score(map_data, manager, turns, caught_number, True)
+            screen.display_score(map_data, manager, config, turns, caught_number, True)
             continue
 
-        pygame.time.delay(config.STEP_INTERVAL)
+        pygame.time.delay(config["STEP_INTERVAL"])
         if seeker_turn:
             viewable_map = seeker.generate_viewable_map(map_data)
             destination = seeker.scan_target(map_data, 2, viewable_map)
@@ -77,7 +85,7 @@ def main():
                         if(len(hider_range)==0):
                             hider_range = {key: [-math.inf, math.inf, -math.inf, math.inf] for key in pings}
                             cells_visited={key:[] for key in pings}
-                        guessing_pos = seeker.process_pings(pings, hider_range, map_data, cells_visited)
+                        guessing_pos = seeker.process_pings(pings, hider_range, map_data, cells_visited, config)
                 
                 hmap = ComputeHMap.compute_h_map(map_data, guessing_pos) 
                 
@@ -103,11 +111,11 @@ def main():
             
         else:
             # ping
-            if turns > 0 and turns % 5 == 0:
-                manager.hiders_ping(map_data)
+            if turns % 5 == 0:
+                manager.hiders_ping(map_data, config)
                 print(pings)
         
-            if config.HIDER_CAN_MOVE:
+            if config["HIDER_CAN_MOVE"]:
                 manager.move_hiders(map_data)
             
             seeker_turn = True
@@ -115,9 +123,8 @@ def main():
 
         # update the screen
         screen.draw_map(map_data, manager)
-        if turns > 1 and turns % 5 == 1:
-            screen.draw_ping(pings)
-        screen.display_score(map_data, manager, turns, id - 1 - len(hiders))
+        screen.draw_ping(pings)
+        screen.display_score(map_data, manager, config, turns, id - 1 - len(hiders))
 
 if __name__ == "__main__":
     main()

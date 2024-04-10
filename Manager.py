@@ -3,7 +3,6 @@ import Seeker
 import ComputeHMap
 import Obstacle
 
-
 class Manager:
     def __init__(
         self,
@@ -22,9 +21,9 @@ class Manager:
         for hider in self.hiders:
             self.pings[hider.id] = []
 
-    def hiders_ping(self, map_data):
+    def hiders_ping(self, map_data, config):
         for hider in self.hiders:
-            self.pings[hider.id].append(hider.ping(map_data))
+            self.pings[hider.id].append(hider.ping(map_data, config))
         return self.pings
 
     def move_hiders(self, map_data):

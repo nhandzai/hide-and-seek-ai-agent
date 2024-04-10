@@ -2,8 +2,8 @@ import Agent
 import math
 import random
 import ComputeHMap
-import config
 import copy
+
 class Seeker(Agent.Agent):
     def __init__(self, view_range, pos):
         super().__init__(view_range, pos)
@@ -34,16 +34,16 @@ class Seeker(Agent.Agent):
                     list_pos_dfs.append((i, j))
         return random.choice(list_pos_dfs)
 
-    def process_pings(self,pings, hider_range, map_data, cells_visited):
+    def process_pings(self,pings, hider_range, map_data, cells_visited, config):
         # kiem tra xem co bao nhieu key trong pings 
         #khoi tao hider_range`
         for key in pings:
             
             for value in pings[key]:
-                hider_range[key][0] = max(0, value[0] - config.HIDER_PING_RANGE,hider_range[key][0])
-                hider_range[key][1] = min(len(map_data), value[0] + config.HIDER_PING_RANGE + 1, hider_range[key][1])
-                hider_range[key][2] = max(0, value[1] - config.HIDER_PING_RANGE, hider_range[key][2])
-                hider_range[key][3] = min(len(map_data[0]), value[1] + config.HIDER_PING_RANGE + 1, hider_range[key][3])
+                hider_range[key][0] = max(0, value[0] - config["HIDER_PING_RANGE"],hider_range[key][0])
+                hider_range[key][1] = min(len(map_data), value[0] + config["HIDER_PING_RANGE"] + 1, hider_range[key][1])
+                hider_range[key][2] = max(0, value[1] - config["HIDER_PING_RANGE"], hider_range[key][2])
+                hider_range[key][3] = min(len(map_data[0]), value[1] + config["HIDER_PING_RANGE"] + 1, hider_range[key][3])
         min_key = -1
         min_val_ping=math.inf
         min_cell_ping=(-1,-1)
@@ -91,4 +91,3 @@ class Seeker(Agent.Agent):
                     min_key = key
       #neu turn tiep theo den diem nay   
         return min_cell_ping
-                

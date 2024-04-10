@@ -1,7 +1,6 @@
 import pygame
 import math
 import Manager
-import config
 
 SCREEN_WIDTH = 1366
 SCREEN_HEIGHT = 768
@@ -142,17 +141,17 @@ class MyScreen():
         pygame.display.flip()
 
     def draw_ping(self, ping_list):
-        if(ping_list != None):
+        if(len(ping_list) > 0):
             for pings in ping_list.values():
                 for ping in pings:
                     pygame.draw.circle(self.window, PING_DOT_COLOR, (ping[1] * self.block_size + self.left + self.block_size / 2, ping[0] * self.block_size + self.top + self.block_size / 2), PING_DOT_RADIUS)
 
-    def display_score(self, map_data, manager, turns = 0, caught_number = 0, game_over = False):
-        points = - turns + 20 * caught_number + config.DEFAULT_POINTS
+    def display_score(self, map_data, manager, config, turns = 0, caught_number = 0, game_over = False):
+        points = - turns + 20 * caught_number + config["DEFAULT_POINTS"]
         if game_over:
-            font_size = config.GAME_OVER_FONT_SIZE
+            font_size = config["GAME_OVER_FONT_SIZE"]
         else:
-            font_size = config.IN_GAME_FONT_SIZE
+            font_size = config["IN_GAME_FONT_SIZE"]
         font = pygame.font.Font('fonts\\joystix monospace.ttf', font_size)
         
         game_points = font.render(f'GAME POINTS: {points}', True, TEXT_COLOR)

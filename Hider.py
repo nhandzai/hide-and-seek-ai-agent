@@ -1,7 +1,6 @@
 import Agent
 import random
 import math
-import config
 
 class Hider(Agent.Agent):
     def __init__(self, view_range, pos: tuple, can_move: bool, id):
@@ -12,11 +11,11 @@ class Hider(Agent.Agent):
     def move_wrapper(self, map, hmap):
         self.move(map, self.find_path(map, hmap))
     
-    def ping(self, mapData):
-        min_i = max(0, self.pos[0] - config.HIDER_PING_RANGE)
-        max_i = min(len(mapData) - 1, self.pos[0] + config.HIDER_PING_RANGE)
-        min_j = max(0, self.pos[1] - config.HIDER_PING_RANGE)
-        max_j = min(len(mapData[0]) - 1, self.pos[1] + config.HIDER_PING_RANGE)
+    def ping(self, mapData, config):
+        min_i = max(0, self.pos[0] - config["HIDER_PING_RANGE"])
+        max_i = min(len(mapData) - 1, self.pos[0] + config["HIDER_PING_RANGE"])
+        min_j = max(0, self.pos[1] - config["HIDER_PING_RANGE"])
+        max_j = min(len(mapData[0]) - 1, self.pos[1] + config["HIDER_PING_RANGE"])
 
         while True:
             rand_i = random.randint(min_i, max_i)

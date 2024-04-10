@@ -1,0 +1,11 @@
+{
+    "SEEKER_VIEW_RANGE": 3,
+    "HIDER_VIEW_RANGE": 2,
+    "HIDER_CAN_MOVE": true,
+    "HIDER_PING_RANGE": 3,
+    "TIME_LIMIT": -1,
+    "STEP_INTERVAL": 50,
+    "DEFAULT_POINTS": 100,
+    "IN_GAME_FONT_SIZE": 20,
+    "GAME_OVER_FONT_SIZE": 64
+}
