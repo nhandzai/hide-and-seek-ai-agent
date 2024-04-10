@@ -10,8 +10,8 @@ import Obstacle
 import SetLevelMap
 
 def main():
-    config = SetLevelMap.choose_level()
-    map_data,obsts_list = ReadMap.read_map("map1_1.txt")
+    config, map_path = SetLevelMap.choose_level()
+    map_data,obsts_list = ReadMap.read_map(map_path)
     seeker = Seeker.Seeker(config["SEEKER_VIEW_RANGE"], ReadMap.find_seeker(map_data))
     hiders_pos = ReadMap.find_hiders(map_data)
     hiders = []
