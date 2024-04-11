@@ -20,7 +20,7 @@ class Hider(Agent.Agent):
         while True:
             rand_i = random.randint(min_i, max_i)
             rand_j = random.randint(min_j, max_j)
-            if mapData[rand_i][rand_j] != 1 and (rand_i, rand_j) != self.pos:
+            if mapData[rand_i][rand_j] != 1 and mapData[rand_i][rand_j] != 4:
                 return (rand_i, rand_j)
         
     def find_path(self, map, hmap):
