@@ -4,13 +4,13 @@ import os
 def choose_level():
     while True:
         choice = int(input("Choose level: "))
-        if choice >= 1 and choice <= 4:
+        if choice >= 1 and choice <= 3:
             break
     
     with open(os.path.join(os.getcwd(), 'config.json'), 'r') as config_file:
         config = json.load(config_file)
         
-        if choice >= 3:
+        if choice == 3:
             config["HIDER_CAN_MOVE"] = True
         else:
             config["HIDER_CAN_MOVE"] = False
