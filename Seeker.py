@@ -27,13 +27,14 @@ class Seeker(Agent.Agent):
         return dir
 
     def find_pos_DFS(self, map_data):
-        list_pos_dfs = []
+        max_path=0
+        result=(0,0)
         for i in range(0, len(map_data)):
             for j in range(0, len(map_data[0])):
-                if map_data[i][j] == 5:
-                    list_pos_dfs.append((i, j))
-        return random.choice(list_pos_dfs)
-
+                if map_data[i][j] >= max_path:
+                    max_path = map_data[i][j]
+                    result = (i,j)
+        return result
     def process_pings(self,pings, hider_range, map_data, cells_visited, config):
         # kiem tra xem co bao nhieu key trong pings 
         #khoi tao hider_range`
