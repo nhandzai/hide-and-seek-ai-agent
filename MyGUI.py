@@ -180,6 +180,13 @@ class MyScreen():
         self.window.blit(caught, caught_rect)
         self.window.blit(steps, steps_rect)
         pygame.display.flip()
+        
+    def display_first_noti(self):
+        font = pygame.font.Font('fonts\\joystix monospace.ttf', 32)
+        text = font.render("Press any key or mouse button to start", True, TEXT_COLOR)
+        text_rect = text.get_rect()
+        text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        self.window.blit(text, text_rect)
 
 def create_screen_wrapper(map_data, manager: Manager.Manager):
     pygame.init()
@@ -187,6 +194,7 @@ def create_screen_wrapper(map_data, manager: Manager.Manager):
     
     screen = MyScreen(map_data)
     screen.draw_map(map_data, manager)
+    screen.display_first_noti()
     pygame.display.flip()
 
     return screen, clock
