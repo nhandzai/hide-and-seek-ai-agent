@@ -143,8 +143,9 @@ class MyScreen():
     def draw_ping(self, ping_list):
         if(len(ping_list) > 0):
             for pings in ping_list.values():
-                for ping in pings:
-                    pygame.draw.circle(self.window, PING_DOT_COLOR, (ping[1] * self.block_size + self.left + self.block_size / 2, ping[0] * self.block_size + self.top + self.block_size / 2), PING_DOT_RADIUS)
+                n = len(pings) - 1
+                if n >= 0:
+                    pygame.draw.circle(self.window, PING_DOT_COLOR, (pings[n][1] * self.block_size + self.left + self.block_size / 2, pings[n][0] * self.block_size + self.top + self.block_size / 2), PING_DOT_RADIUS)
 
     def display_score(self, map_data, manager, config, turns = 0, caught_number = 0, game_over = False):
         points = - turns + 20 * caught_number + config["DEFAULT_POINTS"]
