@@ -113,7 +113,6 @@ def main():
             # ping
             if turns % 5 == 0:
                 manager.hiders_ping(map_data, config)
-                print(pings)
         
             if config["HIDER_CAN_MOVE"]:
                 manager.move_hiders(map_data)
